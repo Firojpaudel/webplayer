@@ -100,5 +100,23 @@ let songs= [
         path: "audio_files/17. Mayajastai.mp3",
         artist: "Si/Ma",
         cover: "images/17.song.jpg"
+    }, 
+    {
+        name: "Take Me Home",
+        path: "audio_files/18.Take Me Home.mp3",
+        artist: "Jess Glynne",
+        cover: "images/18.song.jpg"
     },  
+    {
+        name: "Bhikhaari",
+        path: "audio_files/19.Bhikhaari.mp3",
+        artist: "Oasis Thapa",
+        cover: "images/19.song.jpg"
+    }, 
+    {
+        name: "Dancing On My Own",
+        path: "audio_files/20.Dancing On My Own.mp3",
+        artist: "Calum Scott",
+        cover: "images/20.song.jpg"
+    }, 
 ] 
