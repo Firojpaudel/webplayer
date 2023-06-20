@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1p&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center; 
+    /* aligns in horizontal */
+    align-items: center;
+    /* aligns in vertical */
+    background: #084747;
+    font-family: 'M PLUS 1p', sans-serif;
+}
+.music-player{
+    width: 350px;
+    height: 700px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 40px 100px rgba(255,255,255,0.09);
+    padding: 30px;
+    overflow: hidden;
+    color: #e5efea;
+}
+.music-name, .artist-name{
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.music-name{
+    font-size: 32px;
+    font-weight: 10000;
+    margin-bottom: 25px;
+}
+.artist-name{
+    font-size: 20px;
+}
+.disk{
+    position: relative;
+    display: block;
+    margin: 80px auto;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background-image: url('images/1.song.jpg');
+    background-size: cover;
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.08);
+    animation: rotate 20s linear infinite;
+    animation-play-state: paused;
+}
+.disk.play{
+    animation-play-state: running;
+}
+.disk::before{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #084747;
+}
+.slider{
+    width: 100%;
+    position: relative;
+}
+.seek-bar{
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #119f9f;
+    cursor: pointer;
+}
+
+.seek-bar::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #0000;
+    box-shadow: -400px 0 0 400px #e5efea;
+}
+.current-time, .song-duration{
+    font-size: 13px;
+}
+
+.song-duration
+{
+    position: absolute;
+    right: 0;
+}
+
+.controls{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.play-btn{
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #329191;
+    cursor: pointer; 
+}
+.play-btn span{
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 30px;
+    border-radius: 2px;
+    background: #0c4b4b;
+    transition: .5s;
+    /* clip-path: polygon(0 0,100% 100%,0% 100%); */
+}
+.play-btn span:nth-child(2){
+    left: 55%;
+    transform-origin: center;
+}
+.play-btn.pause span:nth-child(2){
+    transform: translateY(-50%) scaleY(0);
+}
+.play-btn.pause span:nth-child(1){
+    width: 35%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    border-radius: 2px;
+    clip-path: polygon(0 0,100% 50%, 100% 50%, 0% 100%);
+}
+.play-btn.pause{
+    animation: pulse 2s linear infinite;
+}
+
+@keyframes pulse{
+    0%{
+        box-shadow: 0;
+    }
+    50%{
+        box-shadow: 0 0 0 5px rgba(255,255,255,0.1);
+    }
+    100%{
+        box-shadow: 0 0 0 5px rgba(255,255,255,0.08);
+    }
+}
+.btn 
+{
+    width: 40px;
+    height: 40px;
+    background: #329191; 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+}
+svg{
+    width: 100%;
+    height: auto;
+}
+
+@keyframes rotate{
+    0%{
+        transform: rotate(0);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
