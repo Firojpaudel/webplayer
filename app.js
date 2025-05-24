@@ -1,98 +1,104 @@
-let currentMusic= 0;
+let currentMusic = 0;
 
-const music =document.querySelector('#audio');
+const music = document.querySelector('#audio');
+const seekBar = document.querySelector('.seek-bar');
+const songName = document.querySelector('.music-name');
+const artistName = document.querySelector('.artist-name');
+const disk = document.querySelector('.disk');
+const currentTime = document.querySelector('.current-time');
+const musicDuration = document.querySelector('.song-duration');
+const playBtn = document.querySelector('.play-btn');
+const forwardBtn = document.querySelector('.btn-front');
+const backwardBtn = document.querySelector('.btn-back');
 
-const seekBar= document.querySelector('.seek-bar');
-const songName= document.querySelector('.music-name');
-const artistName= document.querySelector('.artist-name');
-const disk= document.querySelector('.disk');
-const currentTime=document.querySelector('.current-time');
-const musicDuration= document.querySelector('.song-duration');
-const playBtn= document.querySelector('.play-btn');
-const forwardBtn= document.querySelector('.btn-front');
-const backwardBtn= document.querySelector('.btn-back')
+// Show Bootstrap toast on page load
+window.onload = () => {
+    const toastElement = document.getElementById('welcomeToast');
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+};
 
-playBtn.addEventListener('click' ,() =>
-{
-    if (playBtn.className.includes('pause')){
-       music.play(); 
-    }else{
+// Play button event listener
+playBtn.addEventListener('click', () => {
+    if (playBtn.className.includes('pause')) {
+        music.play();
+    } else {
         music.pause();
     }
     playBtn.classList.toggle('pause');
     disk.classList.toggle('play');
-})
+});
 
-//setup music 
-
+// Setup music
 const setMusic = (i) => {
-    seekBar.value =0; //setting the slide value to zero
+    seekBar.value = 0;
     let song = songs[i];
-    currentMusic =i;
-    music.src= song.path;
+    currentMusic = i;
+    music.src = song.path;
 
-    songName.innerHTML= song.name;
-    artistName.innerHTML= song.artist;
-    disk.style.backgroundImage= `url('${song.cover}')`;
+    songName.innerHTML = song.name;
+    artistName.innerHTML = song.artist;
+    disk.style.backgroundImage = `url('${song.cover}')`;
 
-    currentMusic.innerHTML= '00:00';
+    currentTime.innerHTML = '00:00';
+    disk.classList.remove('play'); // Ensure disk doesn't rotate until play is pressed
     setTimeout(() => {
-        seekBar.max= music.duration;
+        seekBar.max = music.duration;
         musicDuration.innerHTML = formatTime(music.duration);
     }, 300);
-}
+};
 
 setMusic(0);
 
-//formatting time in mins and secs
-const formatTime = (time) =>
-{
-    let min =Math.floor(time/60);
-    if (min<10){
+// Format time in minutes and seconds
+const formatTime = (time) => {
+    let min = Math.floor(time / 60);
+    if (min < 10) {
         min = `0${min}`;
     }
-    let sec= Math.floor(time % 60);
-    if (sec < 10){
-        sec= `0${sec}`;
+    let sec = Math.floor(time % 60);
+    if (sec < 10) {
+        sec = `0${sec}`;
     }
-    return `${min}: ${sec}`;
-}
+    return `${min}:${sec}`;
+};
 
-//seek bar
-setInterval(() =>{
+// Seek bar update
+setInterval(() => {
     seekBar.value = music.currentTime;
-    currentTime.innerHTML=formatTime(music.currentTime);
-    if (Math.floor(music.currentTime) == Math.floor(seekBar.max)){
-        forwardBtn.click();
+    currentTime.innerHTML = formatTime(music.currentTime);
+    if (Math.floor(music.currentTime) >= Math.floor(seekBar.max)) {
+        forwardBtn.click(); // Trigger next song
     }
-}, 500)
+}, 500);
 
-seekBar.addEventListener('change', () =>
-{
-    music.currentTime =seekBar.value;
-})
+seekBar.addEventListener('change', () => {
+    music.currentTime = seekBar.value;
+});
+
 const playMusic = () => {
     music.play();
-    playBtn.classList.remove('pause');
+    playBtn.classList.add('pause');
     disk.classList.add('play');
-}
-//forward and backward buttons function
+};
+
+// Forward and backward buttons
 forwardBtn.addEventListener('click', () => {
-    if(currentMusic >= songs.length -1){
-        currentMusic =0;
-    }else{
+    if (currentMusic >= songs.length - 1) {
+        currentMusic = 0;
+    } else {
         currentMusic++;
     }
     setMusic(currentMusic);
     playMusic();
-})
+});
 
 backwardBtn.addEventListener('click', () => {
-    if(currentMusic <= 0){
-        currentMusic =songs.length -1;
-    }else{
+    if (currentMusic <= 0) {
+        currentMusic = songs.length - 1;
+    } else {
         currentMusic--;
     }
     setMusic(currentMusic);
     playMusic();
-})
+});
