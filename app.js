@@ -10,28 +10,23 @@ const musicDuration = document.querySelector('.song-duration');
 const playBtn = document.querySelector('.play-btn');
 const forwardBtn = document.querySelector('.btn-front');
 const backwardBtn = document.querySelector('.btn-back');
+const alertBox = document.querySelector('.alert');
 
-// Show Bootstrap toast on page load
-window.onload = () => {
-    const toastElement = document.getElementById('welcomeToast');
-    const toast = new bootstrap.Toast(toastElement);
-    toast.show();
-};
-
-// Play button event listener
-playBtn.addEventListener('click', () => {
-    if (playBtn.className.includes('pause')) {
-        music.play();
-    } else {
-        music.pause();
-    }
-    playBtn.classList.toggle('pause');
-    disk.classList.toggle('play');
+// Show alert on page load and auto-hide after 4 seconds
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        alertBox.classList.add('show');
+        
+        // Auto-hide alert after 4 seconds
+        setTimeout(() => {
+            alertBox.classList.remove('show');
+        }, 4000);
+    }, 500); // 500ms delay to ensure DOM is ready
 });
 
-// Setup music
+// Set up a song
 const setMusic = (i) => {
-    seekBar.value = 0;
+    seekBar.value = 0; // Reset seek bar
     let song = songs[i];
     currentMusic = i;
     music.src = song.path;
@@ -41,16 +36,21 @@ const setMusic = (i) => {
     disk.style.backgroundImage = `url('${song.cover}')`;
 
     currentTime.innerHTML = '00:00';
-    disk.classList.remove('play'); // Ensure disk doesn't rotate until play is pressed
     setTimeout(() => {
         seekBar.max = music.duration;
         musicDuration.innerHTML = formatTime(music.duration);
     }, 300);
+
+    // Ensure paused state
+    music.pause();
+    playBtn.classList.remove('pause');
+    disk.classList.remove('play');
 };
 
+// Load the first song
 setMusic(0);
 
-// Format time in minutes and seconds
+// Format time (e.g., "02:45")
 const formatTime = (time) => {
     let min = Math.floor(time / 60);
     if (min < 10) {
@@ -63,42 +63,60 @@ const formatTime = (time) => {
     return `${min}:${sec}`;
 };
 
-// Seek bar update
+// Play/Pause button
+playBtn.addEventListener('click', () => {
+    if (music.paused) {
+        music.play();
+        playBtn.classList.add('pause');
+        disk.classList.add('play');
+        alertBox.classList.remove('show'); // Hide alert on play
+    } else {
+        music.pause();
+        playBtn.classList.remove('pause');
+        disk.classList.remove('play');
+    }
+});
+
+// Update seek bar and time
 setInterval(() => {
     seekBar.value = music.currentTime;
     currentTime.innerHTML = formatTime(music.currentTime);
     if (Math.floor(music.currentTime) >= Math.floor(seekBar.max)) {
-        forwardBtn.click(); // Trigger next song
+        forwardBtn.click(); // Auto-play next song
     }
 }, 500);
 
+// Seek bar manual change
 seekBar.addEventListener('change', () => {
     music.currentTime = seekBar.value;
 });
 
+// Function to play music
 const playMusic = () => {
     music.play();
     playBtn.classList.add('pause');
     disk.classList.add('play');
+    alertBox.classList.remove('show'); // Hide alert on play
 };
 
-// Forward and backward buttons
+// Next song
 forwardBtn.addEventListener('click', () => {
     if (currentMusic >= songs.length - 1) {
-        currentMusic = 0;
+        currentMusic = 0; // Loop to start
     } else {
         currentMusic++;
     }
     setMusic(currentMusic);
-    playMusic();
+    playMusic(); // Auto-play next song
 });
 
+// Previous song
 backwardBtn.addEventListener('click', () => {
     if (currentMusic <= 0) {
-        currentMusic = songs.length - 1;
+        currentMusic = songs.length - 1; // Loop to end
     } else {
         currentMusic--;
     }
     setMusic(currentMusic);
-    playMusic();
+    playMusic(); // Auto-play previous song
 });
